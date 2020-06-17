@@ -13,7 +13,13 @@ docker-compose up --build -d
 
 ## sample airflow
 
+```
+cd airflow_home
+./create_airflow_server.sh
+```
+
 * 一度登録したDAGSを変更した場合は`airflow initdb`を行う必要がある
+  * 新規追加も同様
 
 ```
 export AIRFLOW_HOME=`pwd`/airflow_home
