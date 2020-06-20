@@ -9,9 +9,14 @@ git clone https://github.com/ymym3412/mlflow-docker-compose.git
 cd mlflow-docker-compose/on_premises/
 mkdir /tmp/artifacts
 docker-compose up --build -d
+
+# localhost:5000
 ```
 
-## sample airflow
+
+
+
+### [没]sample airflow
 
 ```
 cd airflow_home
