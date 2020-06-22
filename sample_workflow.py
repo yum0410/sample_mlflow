@@ -21,11 +21,11 @@ class LoadRowData(luigi.Task):
         iris_data.to_pickle(self.output_path)
 
     def output(self):
-        file_anme = self.output_path.split("/")[-1]
+        file_name = self.output_path.split("/")[-1]
         output_dir = self.output_path.split("/")[:-1]
         if not os.path.exists(os.path.join(*output_dir)):
             os.makedirs(os.path.join(*output_dir))
-        output = os.path.join(*output_dir + [file_anme])
+        output = os.path.join(*output_dir + [file_name])
         return luigi.LocalTarget(output)
 
 @requires(LoadRowData)
@@ -41,11 +41,11 @@ class PreprocessAddRandomNum(luigi.Task):
         data.to_pickle(self.output_path)
 
     def output(self):
-        file_anme = self.output_path.split("/")[-1]
+        file_name = self.output_path.split("/")[-1]
         output_dir = self.output_path.split("/")[:-1]
         if not os.path.exists(os.path.join(*output_dir)):
             os.makedirs(os.path.join(*output_dir))
-        output = os.path.join(*output_dir + [file_anme])
+        output = os.path.join(*output_dir + [file_name])
         return luigi.LocalTarget(output)
 
 @requires(PreprocessAddRandomNum)
@@ -65,15 +65,16 @@ class SplitTrainTest(luigi.Task):
             pickle.dump(data, f)
 
     def output(self):
-        file_anme = self.output_path.split("/")[-1]
+        file_name = self.output_path.split("/")[-1]   
         output_dir = self.output_path.split("/")[:-1]
         if not os.path.exists(os.path.join(*output_dir)):
             os.makedirs(os.path.join(*output_dir))
-        output = os.path.join(*output_dir + [file_anme])
+        output = os.path.join(*output_dir + [file_name])
         return luigi.LocalTarget(output)
 
 @requires(SplitTrainTest)
 class Train(luigi.Task):
+    
     task_namespace = 'iris_tasks'
 
     # output_path
@@ -88,11 +89,11 @@ class Train(luigi.Task):
             pickle.dump(model, f)
 
     def output(self):
-        file_anme = self.output_path.split("/")[-1]
+        file_name = self.output_path.split("/")[-1]
         output_dir = self.output_path.split("/")[:-1]
         if not os.path.exists(os.path.join(*output_dir)):
             os.makedirs(os.path.join(*output_dir))
-        output = os.path.join(*output_dir + [file_anme])
+        output = os.path.join(*output_dir + [file_name])
         return luigi.LocalTarget(output)
 
 @inherits(SplitTrainTest)
@@ -115,11 +116,11 @@ class Predict(luigi.Task):
             pickle.dump(predict, f)
 
     def output(self):
-        file_anme = self.output_path.split("/")[-1]
+        file_name = self.output_path.split("/")[-1]
         output_dir = self.output_path.split("/")[:-1]
         if not os.path.exists(os.path.join(*output_dir)):
             os.makedirs(os.path.join(*output_dir))
-        output = os.path.join(*output_dir + [file_anme])
+        output = os.path.join(*output_dir + [file_name])
         return luigi.LocalTarget(output)
 
 @inherits(SplitTrainTest)
@@ -145,13 +146,13 @@ class Evaluate(luigi.Task):
             pickle.dump(evaluate, f)
 
     def output(self):
-        file_anme = self.output_path.split("/")[-1]
+        file_name = self.output_path.split("/")[-1]
         output_dir = self.output_path.split("/")[:-1]
         if not os.path.exists(os.path.join(*output_dir)):
             os.makedirs(os.path.join(*output_dir))
-        output = os.path.join(*output_dir + [file_anme])
+        output = os.path.join(*output_dir + [file_name])
         return luigi.LocalTarget(output)
 
 
 if __name__ == "__main__":
-    luigi.run(["iris_tasks.Train", "--workers", "1"])
+    luigi.run(["iris_tasks.Evaluate", "--workers", "1", "--local-scheduler"])
